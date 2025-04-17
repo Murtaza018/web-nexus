@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import "./blog.css";
 
-// Sample data
 const initialJournalEntries = [
   {
     id: 1,

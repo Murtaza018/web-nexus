@@ -9,7 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-
+import Navbar from "../navbar/navbar";
 const Home = () => {
   const [username, setUsername] = useState("");
 
@@ -130,107 +130,7 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      <header>
-        <div className={`main-container-TD ${menuOpen ? 'menu-open' : ''}`}>
-          <div className="hamburger-menu-TD">
-            <nav className={`menu-TD ${menuOpen ? 'open-TD' : ''}`}>
-              <ul>
-                <li>
-                  <button
-                    className="button-TD active"
-                    onClick={() => navigate("/")}
-                  >
-                    <HomeIcon />
-                    Home
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="button-TD"
-
-                    onClick={() => {
-                      if (localStorage.getItem("loggedIn") === "true") { navigate("/Gallery") } else {
-                        window.alert("Sign Up/Sign In first")
-                      }
-                    }}
-                  >
-                    <CollectionsIcon />
-                    Gallery
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="button-TD"
-                    onClick={() => {
-                      if (localStorage.getItem("loggedIn") === "true") { navigate("/Blog") } else {
-                        window.alert("Sign Up/Sign In first")
-                      }
-                    }}
-                  >
-                    <BookIcon />
-                    Blogs
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="button-TD"
-                    onClick={() => {
-                      if (localStorage.getItem("loggedIn")  === "true") { navigate("/Recipe") } else {
-                        window.alert("Sign Up/Sign In first")
-                      }
-                    }}
-                  >
-                    <MenuBookIcon />
-                    Recipe Book
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="button-TD"
-                    onClick={() => {
-                      if (localStorage.getItem("loggedIn") === "true") { navigate("/Contact") } else {
-                        window.alert("Sign Up/Sign In first")
-                      }
-                    }}
-                  >
-                    <LocalPhoneIcon />
-                    Contact Us
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="button-TD"
-                    onClick={() => navigate("/signup")}
-                  >
-                    <LogoutIcon />
-                    Sign Up
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="button-TD"
-                    onClick={() => navigate("/signin")}
-                  >
-                    <LogoutIcon />
-                    Sign In
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="button-TD"
-                    onClick={Logout}
-                  >
-                    <LogoutIcon />
-                    Log Out
-                  </button>
-                </li>
-                
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+      <Navbar/>
       {/* Toggle Button for showing/hiding navbar */}
       <button
         className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`}

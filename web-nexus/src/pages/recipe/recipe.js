@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import Navbar from "../navbar/navbar";
 
-// Mock data - in a real app, this would come from a database
 const recipes = [
   {
     id: "1",
@@ -284,6 +284,9 @@ function RecipeCard({ id, title, description, image, prepTime, cookTime, onRecip
 // Home Page Component
 function Home({ onAddRecipeClick, onRecipeClick }) {
   return (
+    <div>
+
+    <Navbar/>
     <div id="home" style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
         <h1 style={{ fontSize: '1.875rem', fontWeight: 700 }}>My Recipe Book</h1>
@@ -308,10 +311,11 @@ function Home({ onAddRecipeClick, onRecipeClick }) {
             prepTime={recipe.prepTime}
             cookTime={recipe.cookTime}
             onRecipeClick={onRecipeClick}
-          />
-        ))}
+            />
+          ))}
       </div>
     </div>
+</div>
   );
 }
 
@@ -643,7 +647,6 @@ function RecipeDetail({ recipeId, onBackHome }) {
   );
 }
 
-// Main App Component
 function App() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRecipeId, setSelectedRecipeId] = useState(null);
