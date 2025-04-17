@@ -10,6 +10,7 @@ import {
   Send,
 } from "lucide-react";
 import "./blog.css";
+import toast from "react-hot-toast"
 
 const initialJournalEntries = [
   {
@@ -164,6 +165,7 @@ export default function FamilyJournal() {
       if (newEntry.theme && !themes.includes(newEntry.theme)) {
         setThemes([...themes, newEntry.theme]);
       }
+      toast.success("New blog added!")
     }
 
     // Reset form
@@ -182,6 +184,7 @@ export default function FamilyJournal() {
     });
     setEditingEntryId(entry.id);
     setIsAddingEntry(true);
+    toast.success("Blog edited!")
   };
 
   // Delete an entry
@@ -189,6 +192,7 @@ export default function FamilyJournal() {
     const updatedEntries = entries.filter((entry) => entry.id !== id);
     setEntries(updatedEntries);
     setFilteredEntries(updatedEntries);
+    toast.success("Blog deleted!")
   };
 
   // Add a comment to an entry
@@ -215,6 +219,7 @@ export default function FamilyJournal() {
     setFilteredEntries(updatedEntries);
     setNewComment("");
     setActiveEntryForComment(null);
+    toast.success("Comment added!")
   };
 
   // Format date for display

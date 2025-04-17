@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Navbar from "../navbar/navbar";
+import toast from "react-hot-toast"
 
 const recipes = [
   {
@@ -391,6 +392,7 @@ function AddRecipe({ onBackHome, onRecipeAdded }) {
     };
     recipes.push(newRecipe);
     onRecipeAdded();
+    toast.success('Recipe created successfully!')
   };
 
   return (

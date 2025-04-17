@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import toast from "react-hot-toast"
 import {
   Button,
   Box,
@@ -53,6 +54,23 @@ const Gallery = () => {
   const [imageMenuAnchorEl, setImageMenuAnchorEl] = useState(null)
   const [selectedImageForMenu, setSelectedImageForMenu] = useState(null)
 
+  const familyMembers = [
+    "Mom",
+    "Dad",
+    "Jake",
+    "Emma",
+    "Grandma",
+    "Grandpa",
+    "aneeq",
+  ];
+
+  const [currentUser, setCurrentUser] = useState({
+    firstname: "Dad",
+    lastname: "Raza",
+    username: "araza-29",
+    password: "aloomian",
+  });
+
   useEffect(() => {
     const loadImages = async () => {
       try {
@@ -60,7 +78,16 @@ const Gallery = () => {
         const fetchedImagesData = await getImagesFromIndexedDB()
 
         // Filter images by album if an album is selected
-        if (selectedAlbum) {
+        if(selectedAlbum === "family") {
+          if (familyMembers.includes(currentUser.firstname)){
+            const filteredImages = fetchedImagesData.filter((img) => img.albumId === selectedAlbum)
+            setImages(filteredImages || [])
+          }
+          else {
+            setImages([])
+          }
+        }
+        else if (selectedAlbum) {
           const filteredImages = fetchedImagesData.filter((img) => img.albumId === selectedAlbum)
           setImages(filteredImages || [])
         } else {
@@ -120,8 +147,10 @@ const Gallery = () => {
 
       const fileInput = document.getElementById("camera-input")
       if (fileInput) fileInput.value = ""
+      toast.success('Files uploaded successfully!')
     } catch (error) {
       console.error("Error uploading images:", error)
+      toast.error('Files not uploaded!')
     }
   }
 
@@ -581,7 +610,7 @@ const Gallery = () => {
         {ALBUMS.map((album) => (
           <MenuItem
             key={album.id}
-            onClick={() => handleAssignToAlbum(selectedImageForMenu?.id, album.id)}
+            onClick={() => {handleAssignToAlbum(selectedImageForMenu?.id, album.id); toast.success('Album assigned successfully!')}}
             selected={selectedImageForMenu?.albumId === album.id}
           >
             <ListItemIcon>
@@ -591,7 +620,7 @@ const Gallery = () => {
           </MenuItem>
         ))}
         {selectedImageForMenu?.albumId && (
-          <MenuItem onClick={() => handleAssignToAlbum(selectedImageForMenu?.id, null)}>
+          <MenuItem onClick={() => {handleAssignToAlbum(selectedImageForMenu?.id, null); toast.success('Removed from album!')}}>
             <ListItemText>Remove from Album</ListItemText>
           </MenuItem>
         )}

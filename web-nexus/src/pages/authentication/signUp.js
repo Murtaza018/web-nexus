@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast"
 import './signUp.css';
 
 const SignUp = () => {
@@ -24,6 +25,7 @@ const SignUp = () => {
 
         // Navigate to SignIn page
         navigate('/signin');
+        toast.success('Signed up successfully!')
     };
 
     return (
