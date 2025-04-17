@@ -610,7 +610,7 @@ const Gallery = () => {
         {ALBUMS.map((album) => (
           <MenuItem
             key={album.id}
-            onClick={() => handleAssignToAlbum(selectedImageForMenu?.id, album.id)}
+            onClick={() => {handleAssignToAlbum(selectedImageForMenu?.id, album.id); toast.success('Album assigned successfully!')}}
             selected={selectedImageForMenu?.albumId === album.id}
           >
             <ListItemIcon>
@@ -620,7 +620,7 @@ const Gallery = () => {
           </MenuItem>
         ))}
         {selectedImageForMenu?.albumId && (
-          <MenuItem onClick={() => handleAssignToAlbum(selectedImageForMenu?.id, null)}>
+          <MenuItem onClick={() => {handleAssignToAlbum(selectedImageForMenu?.id, null); toast.success('Removed from album!')}}>
             <ListItemText>Remove from Album</ListItemText>
           </MenuItem>
         )}
