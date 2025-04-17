@@ -1,7 +1,23 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Button, Box, Typography, Dialog, DialogContent, IconButton } from "@mui/material"
+import { useState, useEffect, useRef } from "react"
+import {
+  Button,
+  Box,
+  Typography,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  Chip,
+} from "@mui/material"
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,8 +25,20 @@ import {
   Slideshow as SlideshowIcon,
   PlayCircle,
   PauseCircle,
+  Photo,
+  PhotoAlbum,
+  MoreVert,
 } from "@mui/icons-material"
-import { initDB, saveImagesToIndexedDB, getImagesFromIndexedDB, clearImagesFromIndexedDB } from "./imageDB" // Assuming this file manages IndexedDB logic
+import { initDB, saveImagesToIndexedDB, getImagesFromIndexedDB, clearImagesFromIndexedDB, assignImageToAlbum } from "./imageDB"
+
+// Hardcoded albums
+const ALBUMS = [
+  { id: "family", name: "Family Photos" },
+  { id: "vacation", name: "Vacation" },
+  { id: "pets", name: "Pets" },
+  { id: "events", name: "Events" },
+  { id: "food", name: "Food" },
+]
 
 const Gallery = () => {
   const [images, setImages] = useState([])
@@ -18,22 +46,33 @@ const Gallery = () => {
   const [imageUrls, setImageUrls] = useState({})
   const [slideshowOpen, setSlideshowOpen] = useState(false)
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
-  // Add a new state variable for auto-play after the other state variables
   const [autoPlay, setAutoPlay] = useState(true)
+
+  // Album state
+  const [selectedAlbum, setSelectedAlbum] = useState("")
+  const [imageMenuAnchorEl, setImageMenuAnchorEl] = useState(null)
+  const [selectedImageForMenu, setSelectedImageForMenu] = useState(null)
 
   useEffect(() => {
     const loadImages = async () => {
       try {
         await initDB()
         const fetchedImagesData = await getImagesFromIndexedDB()
-        setImages(fetchedImagesData || [])
+
+        // Filter images by album if an album is selected
+        if (selectedAlbum) {
+          const filteredImages = fetchedImagesData.filter((img) => img.albumId === selectedAlbum)
+          setImages(filteredImages || [])
+        } else {
+          setImages(fetchedImagesData || [])
+        }
       } catch (error) {
         console.error("Error loading images:", error)
       }
     }
 
     loadImages()
-  }, [])
+  }, [selectedAlbum])
 
   useEffect(() => {
     const newUrls = {}
@@ -65,9 +104,18 @@ const Gallery = () => {
     if (!uploadedImages) return
 
     try {
-      await saveImagesToIndexedDB(uploadedImages)
+      // Save images with album ID if an album is selected
+      await saveImagesToIndexedDB(uploadedImages, selectedAlbum || null)
+
+      // Refresh images based on current album selection
       const updatedImages = await getImagesFromIndexedDB()
-      setImages(updatedImages || [])
+      if (selectedAlbum) {
+        const filteredImages = updatedImages.filter((img) => img.albumId === selectedAlbum)
+        setImages(filteredImages || [])
+      } else {
+        setImages(updatedImages || [])
+      }
+
       setUploadedImages(null)
 
       const fileInput = document.getElementById("camera-input")
@@ -87,8 +135,31 @@ const Gallery = () => {
     }
   }
 
+  // Album functions
+  const handleAlbumChange = (event) => {
+    setSelectedAlbum(event.target.value)
+  }
+
+  const handleAssignToAlbum = async (imageId, albumId) => {
+    try {
+      await assignImageToAlbum(imageId, albumId)
+      
+      // Refresh images based on current album selection
+      const updatedImages = await getImagesFromIndexedDB()
+      if (selectedAlbum) {
+        const filteredImages = updatedImages.filter((img) => img.albumId === selectedAlbum)
+        setImages(filteredImages || [])
+      } else {
+        setImages(updatedImages || [])
+      }
+
+      setImageMenuAnchorEl(null)
+    } catch (error) {
+      console.error("Error assigning image to album:", error)
+    }
+  }
+
   // Slideshow functions
-  // Modify the openSlideshow function to start auto-play by default
   const openSlideshow = (startIndex = 0) => {
     if (images.length > 0) {
       setCurrentSlideIndex(startIndex)
@@ -109,7 +180,6 @@ const Gallery = () => {
     setCurrentSlideIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1))
   }
 
-  // Add a toggleAutoPlay function after the goToPrevSlide function
   const toggleAutoPlay = () => {
     setAutoPlay((prev) => !prev)
   }
@@ -132,14 +202,14 @@ const Gallery = () => {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [slideshowOpen])
 
-  // Add this useEffect for auto-play functionality after the keyboard navigation useEffect
+  // Auto-play functionality
   useEffect(() => {
     let intervalId
 
     if (slideshowOpen && autoPlay && images.length > 1) {
       intervalId = setInterval(() => {
         goToNextSlide()
-      }, 2000) // Change slide every 1 second
+      }, 2000) // Change slide every 2 seconds
     }
 
     return () => {
@@ -147,11 +217,61 @@ const Gallery = () => {
     }
   }, [slideshowOpen, autoPlay, images.length])
 
+  // Image menu handlers
+  const handleImageMenuOpen = (event, image) => {
+    event.stopPropagation()
+    setImageMenuAnchorEl(event.currentTarget)
+    setSelectedImageForMenu(image)
+  }
+
+  const handleImageMenuClose = () => {
+    setImageMenuAnchorEl(null)
+    setSelectedImageForMenu(null)
+  }
+
+  // Get current album name
+  const getCurrentAlbumName = () => {
+    if (!selectedAlbum) return "All Photos"
+    const album = ALBUMS.find((a) => a.id === selectedAlbum)
+    return album ? album.name : "Unknown Album"
+  }
+
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Photo Gallery
-      </Typography>
+      {/* Header with album dropdown */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Photo Gallery
+        </Typography>
+        
+        {/* Album dropdown */}
+        <FormControl variant="outlined" fullWidth sx={{ mb: 2 }}>
+          <InputLabel id="album-select-label">Select Album</InputLabel>
+          <Select
+            labelId="album-select-label"
+            id="album-select"
+            value={selectedAlbum}
+            onChange={handleAlbumChange}
+            label="Select Album"
+          >
+            <MenuItem value="">
+              <ListItemIcon>
+                <Photo />
+              </ListItemIcon>
+              <ListItemText>All Photos</ListItemText>
+            </MenuItem>
+            <Divider />
+            {ALBUMS.map((album) => (
+              <MenuItem key={album.id} value={album.id}>
+                <ListItemIcon>
+                  <PhotoAlbum />
+                </ListItemIcon>
+                <ListItemText>{album.name}</ListItemText>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
 
       <Box sx={{ mb: 2, display: "flex", flexWrap: "wrap", gap: 2 }}>
         <input
@@ -164,13 +284,22 @@ const Gallery = () => {
           onChange={handleImageChange}
         />
         <label htmlFor="camera-input">
-          <Button variant="contained" component="span" sx={{backgroundColor: '#387478','&:hover': {backgroundColor: '#2f5f61'},color: '#fff'}}>
+          <Button
+            variant="contained"
+            component="span"
+            sx={{ backgroundColor: "#387478", "&:hover": { backgroundColor: "#2f5f61" }, color: "#fff" }}
+          >
             Take Picture
           </Button>
         </label>
         {uploadedImages && (
-          <Button variant="contained" onClick={handleUploadImage} sx={{backgroundColor: '#387478','&:hover': {backgroundColor: '#2f5f61'},color: '#fff'}}>
+          <Button
+            variant="contained"
+            onClick={handleUploadImage}
+            sx={{ backgroundColor: "#387478", "&:hover": { backgroundColor: "#2f5f61" }, color: "#fff" }}
+          >
             Upload {uploadedImages.length} Image{uploadedImages.length > 1 ? "s" : ""}
+            {selectedAlbum && ` to ${getCurrentAlbumName()}`}
           </Button>
         )}
 
@@ -193,8 +322,18 @@ const Gallery = () => {
         <Box sx={{ mb: 2 }}>
           <Typography variant="subtitle1" color="text.secondary">
             {uploadedImages.length} image{uploadedImages.length > 1 ? "s" : ""} selected for upload
+            {selectedAlbum && <span> to album: {getCurrentAlbumName()}</span>}
           </Typography>
         </Box>
+      )}
+
+      {/* Album indicator */}
+      {selectedAlbum && (
+        <Chip 
+          label={`Album: ${getCurrentAlbumName()}`} 
+          onDelete={() => setSelectedAlbum("")} 
+          sx={{ mb: 2 }} 
+        />
       )}
 
       {/* --- Scrollable Horizontal Image Row --- */}
@@ -225,6 +364,7 @@ const Gallery = () => {
                   backgroundColor: "#fefefe",
                   transition: "transform 0.2s ease",
                   cursor: "pointer",
+                  position: "relative",
                   "&:hover": {
                     transform: "scale(1.05)",
                   },
@@ -258,12 +398,53 @@ const Gallery = () => {
                     {image.file ? "Loading..." : "Invalid"}
                   </Typography>
                 )}
+
+                {/* Image menu button */}
+                <IconButton
+                  size="small"
+                  sx={{
+                    position: "absolute",
+                    top: 4,
+                    right: 4,
+                    bgcolor: "rgba(255, 255, 255, 0.7)",
+                    "&:hover": {
+                      bgcolor: "rgba(255, 255, 255, 0.9)",
+                    },
+                  }}
+                  onClick={(e) => handleImageMenuOpen(e, image)}
+                >
+                  <MoreVert fontSize="small" />
+                </IconButton>
+                
+                {/* Album indicator on image */}
+                {image.albumId && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      backgroundColor: "rgba(0,0,0,0.6)",
+                      color: "white",
+                      padding: "2px 8px",
+                      fontSize: "0.7rem",
+                      textAlign: "center",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {ALBUMS.find(a => a.id === image.albumId)?.name || "Album"}
+                  </Box>
+                )}
               </Box>
             )
           })
         ) : (
           <Typography color="text.secondary" sx={{ mx: "auto" }}>
-            No images available. Take some pictures to add to your gallery.
+            {selectedAlbum
+              ? "No images in this album. Take some pictures to add to this album."
+              : "No images available. Take some pictures to add to your gallery."}
           </Typography>
         )}
       </Box>
@@ -368,7 +549,7 @@ const Gallery = () => {
               >
                 {currentSlideIndex + 1} / {images.length}
               </Typography>
-              {/* Add an auto-play toggle button in the slideshow dialog after the image counter Typography */}
+
               <IconButton
                 onClick={toggleAutoPlay}
                 sx={{
@@ -388,6 +569,33 @@ const Gallery = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Image Menu */}
+      <Menu anchorEl={imageMenuAnchorEl} open={Boolean(imageMenuAnchorEl)} onClose={handleImageMenuClose}>
+        <MenuItem disabled>
+          <Typography variant="body2" color="text.secondary">
+            Add to Album
+          </Typography>
+        </MenuItem>
+        <Divider />
+        {ALBUMS.map((album) => (
+          <MenuItem
+            key={album.id}
+            onClick={() => handleAssignToAlbum(selectedImageForMenu?.id, album.id)}
+            selected={selectedImageForMenu?.albumId === album.id}
+          >
+            <ListItemIcon>
+              <PhotoAlbum fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{album.name}</ListItemText>
+          </MenuItem>
+        ))}
+        {selectedImageForMenu?.albumId && (
+          <MenuItem onClick={() => handleAssignToAlbum(selectedImageForMenu?.id, null)}>
+            <ListItemText>Remove from Album</ListItemText>
+          </MenuItem>
+        )}
+      </Menu>
     </Box>
   )
 }
