@@ -53,6 +53,23 @@ const Gallery = () => {
   const [imageMenuAnchorEl, setImageMenuAnchorEl] = useState(null)
   const [selectedImageForMenu, setSelectedImageForMenu] = useState(null)
 
+  const familyMembers = [
+    "Mom",
+    "Dad",
+    "Jake",
+    "Emma",
+    "Grandma",
+    "Grandpa",
+    "aneeq",
+  ];
+
+  const [currentUser, setCurrentUser] = useState({
+    firstname: "Dad",
+    lastname: "Raza",
+    username: "araza-29",
+    password: "aloomian",
+  });
+
   useEffect(() => {
     const loadImages = async () => {
       try {
@@ -60,7 +77,16 @@ const Gallery = () => {
         const fetchedImagesData = await getImagesFromIndexedDB()
 
         // Filter images by album if an album is selected
-        if (selectedAlbum) {
+        if(selectedAlbum === "family") {
+          if (familyMembers.includes(currentUser.firstname)){
+            const filteredImages = fetchedImagesData.filter((img) => img.albumId === selectedAlbum)
+            setImages(filteredImages || [])
+          }
+          else {
+            setImages([])
+          }
+        }
+        else if (selectedAlbum) {
           const filteredImages = fetchedImagesData.filter((img) => img.albumId === selectedAlbum)
           setImages(filteredImages || [])
         } else {
