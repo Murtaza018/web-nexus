@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useRef } from "react"
 import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom";
+
+import Navbar from "../navbar/navbar";
 import {
   Button,
   Box,
@@ -19,6 +22,9 @@ import {
   Select,
   Chip,
 } from "@mui/material"
+
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   ChevronLeft,
   ChevronRight,
@@ -263,8 +269,24 @@ const Gallery = () => {
     const album = ALBUMS.find((a) => a.id === selectedAlbum)
     return album ? album.name : "Unknown Album"
   }
-
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(true);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
   return (
+    <div className="home-page">
+      <Navbar open={menuOpen}/>
+      {/* Toggle Button for showing/hiding navbar */}
+      <button
+                    className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`}
+                    onClick={toggleMenu}
+                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                  >
+                    {menuOpen ? <CloseIcon /> : <MenuIcon />}
+                  </button>
+
+      <main className={`home-content ${!menuOpen ? 'menu-closed' : ''}`}>
     <Box sx={{ p: 3 }}>
       {/* Header with album dropdown */}
       <Box sx={{ mb: 3 }}>
@@ -625,6 +647,8 @@ const Gallery = () => {
         )}
       </Menu>
     </Box>
+    </main>
+    </div>
   )
 }
 

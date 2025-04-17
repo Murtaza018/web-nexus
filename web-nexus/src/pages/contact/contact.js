@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import "./contact.css";
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from "react-router-dom";
 
+import Navbar from "../navbar/navbar";
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -40,7 +44,24 @@ export default function Contact() {
     setFormData({ name: "", message: "" });
   };
 
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(true);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
   return (
+    <div className="home-page">
+      <Navbar open={menuOpen}/>
+      {/* Toggle Button for showing/hiding navbar */}
+      <button
+                    className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`}
+                    onClick={toggleMenu}
+                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                  >
+                    {menuOpen ? <CloseIcon /> : <MenuIcon />}
+                  </button>
+
+      <main className={`home-content ${!menuOpen ? 'menu-closed' : ''}`}>
     <div className="container-CP">
       <div className="contact-wrapper-CP">
         <h1 className="title-CP">Contact Us</h1>
@@ -91,6 +112,8 @@ export default function Contact() {
           </a>
         </div>
       </div>
+    </div>
+    </main>
     </div>
   );
 }

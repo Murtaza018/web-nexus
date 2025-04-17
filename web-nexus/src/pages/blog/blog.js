@@ -11,8 +11,13 @@ import {
 } from "lucide-react";
 import "./blog.css";
 import toast from "react-hot-toast"
+import Navbar from "../navbar/navbar";
+import { useNavigate } from "react-router-dom";
 
-// Sample data
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+
+
 const initialJournalEntries = [
   {
     id: 1,
@@ -132,7 +137,6 @@ export default function FamilyJournal() {
     setFilteredEntries(filtered);
   };
 
-  // Handle input change for entry form
   const handleEntryChange = (e) => {
     const { name, value } = e.target;
     setNewEntry((prev) => ({ ...prev, [name]: value }));
@@ -241,7 +245,25 @@ export default function FamilyJournal() {
   // Check if user is family member
   const isFamilyMember = familyMembers.includes(currentUser.firstname);
 
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(true);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
+    <div>
+      <Navbar open={menuOpen}/>
+      {/* Toggle Button for showing/hiding navbar */}
+      <button
+                    className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`}
+                    onClick={toggleMenu}
+                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                  >
+                    {menuOpen ? <CloseIcon /> : <MenuIcon />}
+                  </button>
+
+      <main className={`home-content ${!menuOpen ? 'menu-closed' : ''}`}>
     <div className="blog-body-BP">
       <div className="journal-container-BP">
         <div className="journal-content-BP">
@@ -269,7 +291,7 @@ export default function FamilyJournal() {
                       setSearchTerm(e.target.value);
                       filterEntries();
                     }}
-                  />
+                    />
                 </div>
               </div>
 
@@ -315,7 +337,7 @@ export default function FamilyJournal() {
               <button
                 className="add-entry-btn-BP"
                 onClick={() => setIsAddingEntry(true)}
-              >
+                >
                 New Entry
               </button>
             </div>
@@ -337,7 +359,7 @@ export default function FamilyJournal() {
                       className="form-input-BP"
                       placeholder="Entry title"
                       required
-                    />
+                      />
                   </div>
                   <div className="form-group-BP">
                     <label className="form-label-BP">Content</label>
@@ -348,7 +370,7 @@ export default function FamilyJournal() {
                       className="form-textarea-BP"
                       placeholder="Write your journal entry here..."
                       required
-                    ></textarea>
+                      ></textarea>
                   </div>
                   <div className="form-row-BP">
                     <div className="form-group-BP half-width-BP">
@@ -361,7 +383,7 @@ export default function FamilyJournal() {
                         className="form-input-BP"
                         placeholder="e.g., Nature, Sports, Travel"
                         list="theme-suggestions"
-                      />
+                        />
                       <datalist id="theme-suggestions">
                         {themes.map((theme) => (
                           <option key={theme} value={theme} />
@@ -436,13 +458,13 @@ export default function FamilyJournal() {
                           <button
                             className="edit-btn-BP"
                             onClick={() => editEntry(entry)}
-                          >
+                            >
                             <Edit size={18} />
                           </button>
                           <button
                             className="delete-btn-BP"
                             onClick={() => deleteEntry(entry.id)}
-                          >
+                            >
                             <Trash2 size={18} />
                           </button>
                         </div>
@@ -530,5 +552,7 @@ export default function FamilyJournal() {
         </div>
       </div>
     </div>
+    </main>
+  </div>
   );
 }
