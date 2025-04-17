@@ -56,7 +56,7 @@ const initialJournalEntries = [
 ];
 
 // Family members list for access control
-const familyMembers = ["Mom", "Dad", "Jake", "Emma", "Grandma", "Grandpa"];
+const familyMembers = ["Mom", "Dad", "Jake", "Emma", "Grandma", "Grandpa", "aneeq"];
 
 export default function FamilyJournal() {
   const [entries, setEntries] = useState(initialJournalEntries);
