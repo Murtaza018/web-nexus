@@ -27,6 +27,7 @@ const SignUp = () => {
     };
 
     return (
+        <div className='body-su'>
         <div className="main-su">
             <div className="signup-su">
                 <form onSubmit={handleSubmit}>
@@ -35,38 +36,43 @@ const SignUp = () => {
                         type="text"
                         name="username"
                         placeholder="User name"
+                        className='input-su'
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
-                    />
+                        />
                     <input
                         type="text"
                         name="firstname"
                         placeholder="First Name"
                         value={firstname}
+                        className='input-su'
                         onChange={(e) => setFirstname(e.target.value)}
                         required
-                    />
+                        />
                     <input
                         type="text"
                         name="lastname"
                         placeholder="Last Name"
+                        className='input-su'
                         value={lastname}
                         onChange={(e) => setLastname(e.target.value)}
                         required
-                    />
+                        />
                     <input
                         type="password"
                         name="password"
                         placeholder="Password"
+                        className='input-su'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                    />
-                    <button type="submit">Sign up</button>
+                        />
+                    <button className='button-su' type="submit">Sign up</button>
                 </form>
             </div>
         </div>
+    </div>
     );
 };
 

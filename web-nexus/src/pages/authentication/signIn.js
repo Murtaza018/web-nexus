@@ -25,6 +25,7 @@ const SignIn = () => {
   };
 
   return (
+    <div className='body-su'>
     <div className="main-si">
       <div className="login-si">
         <form onSubmit={handleLogin}>
@@ -33,21 +34,24 @@ const SignIn = () => {
             type="text"
             name="username"
             placeholder="User name"
+            className='input-si'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-          />
+            />
           <input
             type="password"
             name="password"
             placeholder="Password"
             value={password}
+            className='input-si'
             onChange={(e) => setPassword(e.target.value)}
             required
-          />
+            />
           <button className= "button-si" type="submit">Login</button>
         </form>
       </div>
+    </div>
     </div>
   );
 };
