@@ -18,7 +18,8 @@ const SignIn = () => {
       storedUser.password === password
     ) {
       alert('Login successful!');
-      navigate('/Blog');
+      localStorage.setItem("loggedIn",true)
+      navigate('/');
     } else {
       alert('Invalid credentials!');
     }
