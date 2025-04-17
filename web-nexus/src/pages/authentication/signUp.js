@@ -24,8 +24,8 @@ const SignUp = () => {
         localStorage.setItem('user', JSON.stringify(userData));
 
         // Navigate to SignIn page
-        navigate('/signin');
         toast.success('Signed up successfully!')
+        navigate('/signin');
     };
 
     return (

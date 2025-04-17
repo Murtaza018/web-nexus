@@ -7,10 +7,12 @@ import Contact from "./pages/contact/contact";
 import Blog from "./pages/blog/blog";
 import SignIn from "./pages/authentication/signIn";
 import Recipe from "./pages/recipe/recipe";
+import { Toaster } from "react-hot-toast"
 
 function App() {
   return (
     <div className="App">
+      <Toaster position="top-center" reverseOrder={false} />
       <BrowserRouter>
         <Routes>
           <Route path="/">
