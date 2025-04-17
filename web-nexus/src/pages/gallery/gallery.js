@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Box} from '@mui/material'
-const gallery = () => {
+const Gallery = () => {
   const handleChange = () => {
     
   }
@@ -26,4 +26,4 @@ const gallery = () => {
   );
 }
 
-export default gallery;
+export default Gallery;

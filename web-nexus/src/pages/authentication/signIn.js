@@ -1,11 +1,19 @@
 import React from 'react';
+import '../css/login.css';
 
-const signIn = () => {
+const SignIn = () => {
   return (
-    <div>
-      
+    <div className="main">
+      <div className="login">
+        <form>
+          <label htmlFor="chk" aria-hidden="true">Login</label>
+          <input type="text" name="username" placeholder="User name" required />
+          <input type="password" name="password" placeholder="Password" required />
+          <button type="submit">Login</button>
+        </form>
+      </div>
     </div>
   );
 }
 
-export default signIn;
+export default SignIn;
