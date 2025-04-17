@@ -21,7 +21,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  color: #3b82f6;
+  color: #387478;
   text-align: center;
 }
 
@@ -55,13 +55,13 @@
 .input-CP:focus,
 .textarea-CP:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #387478;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .button-CP {
   padding: 0.75rem 1.5rem;
-  background-color: #3b82f6;
+  background-color: #387478;
   color: white;
   border: none;
   border-radius: 4px;
@@ -73,7 +73,7 @@
 }
 
 .button-CP:hover {
-  background-color: #2563eb;
+  background-color: #193436;
 }
 
 .family-email-CP {
@@ -84,14 +84,14 @@
 }
 
 .email-link-CP {
-  color: #3b82f6;
+  color: #387478;
   font-weight: 500;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .email-link-CP:hover {
-  color: #2563eb;
+  color: #387478;
   text-decoration: underline;
 }
 
