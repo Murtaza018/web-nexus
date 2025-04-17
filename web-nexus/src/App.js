@@ -18,10 +18,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/">
-            <Route index element={<Home />} />
+            {/* <Route index element={<Home />} />
             <Route path="RentalDashboard">
               <Route index element={<RentalDashboard />} />
-            </Route>
+            </Route> */}
           </Route>
         </Routes>
       </BrowserRouter>
