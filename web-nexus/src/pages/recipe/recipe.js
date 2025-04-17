@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import toast from "react-hot-toast"
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 const recipes = [
   {
@@ -284,10 +286,26 @@ function RecipeCard({ id, title, description, image, prepTime, cookTime, onRecip
 
 // Home Page Component
 function Home({ onAddRecipeClick, onRecipeClick }) {
-  return (
-    <div>
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(true);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
-    <Navbar/>
+  return (
+    
+<div className="home-page">
+      <Navbar open={menuOpen}/>
+      {/* Toggle Button for showing/hiding navbar */}
+      <button
+                    className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`}
+                    onClick={toggleMenu}
+                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                  >
+                    {menuOpen ? <CloseIcon /> : <MenuIcon />}
+                  </button>
+
+      <main className={`home-content ${!menuOpen ? 'menu-closed' : ''}`}>
     <div id="home" style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
         <h1 style={{ fontSize: '1.875rem', fontWeight: 700 }}>My Recipe Book</h1>
@@ -316,6 +334,7 @@ function Home({ onAddRecipeClick, onRecipeClick }) {
           ))}
       </div>
     </div>
+    </main>
 </div>
   );
 }

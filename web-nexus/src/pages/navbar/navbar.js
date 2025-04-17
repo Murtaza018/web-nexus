@@ -9,24 +9,21 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
-const Navbar = () => {
+const Navbar = ({open}) => {
     const navigate=useNavigate();
     const Logout = () => {
         localStorage.removeItem("user")
         localStorage.setItem("loggedIn", false)
         window.location.reload();
       }
-      const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-      };
+     
       
-        const [menuOpen, setMenuOpen] = useState(true);
   return (
     <div>
       <header>
-        <div className={`main-container-TD ${menuOpen ? 'menu-open' : ''}`}>
+        <div className={`main-container-TD ${open ? 'menu-open' : ''}`}>
           <div className="hamburger-menu-TD">
-            <nav className={`menu-TD ${menuOpen ? 'open-TD' : ''}`}>
+            <nav className={`menu-TD ${open ? 'open-TD' : ''}`}>
               <ul>
                 <li>
                   <button
@@ -123,6 +120,7 @@ const Navbar = () => {
           </div>
         </div>
       </header>
+      
 
     </div>
   );

@@ -8,8 +8,9 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from 'react';
+
 import Navbar from "../navbar/navbar";
+import { useState, useEffect } from 'react';
 const Home = () => {
   const [username, setUsername] = useState("");
 
@@ -21,8 +22,6 @@ const Home = () => {
     }
   }, []);
   
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(true);
   const latestPosts = [
     {
       id: "1",
@@ -118,6 +117,8 @@ const Home = () => {
     },
   ];
 
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(true);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -130,15 +131,15 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      <Navbar/>
+      <Navbar open={menuOpen}/>
       {/* Toggle Button for showing/hiding navbar */}
       <button
-        className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`}
-        onClick={toggleMenu}
-        aria-label={menuOpen ? "Close menu" : "Open menu"}
-      >
-        {menuOpen ? <CloseIcon /> : <MenuIcon />}
-      </button>
+                    className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`}
+                    onClick={toggleMenu}
+                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                  >
+                    {menuOpen ? <CloseIcon /> : <MenuIcon />}
+                  </button>
 
       <main className={`home-content ${!menuOpen ? 'menu-closed' : ''}`}>
         <div className="welcome-banner">
