@@ -1,4 +1,4 @@
-/* .body-si {
+.body-si {
 	margin: 0;
 	padding: 0;
 	display: flex;
@@ -38,7 +38,7 @@
 	transition: 0.5s ease-in-out;
 }
 
-input {
+.input-si {
   width: 60%;
   height: 10px;
   background: #e0dede;
@@ -66,4 +66,4 @@ input {
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
-} */
+}
