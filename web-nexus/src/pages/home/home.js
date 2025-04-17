@@ -11,6 +11,16 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 
 const Home = () => {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUsername(parsedUser.username);
+    }
+  }, []);
+  
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(true);
   const latestPosts = [
@@ -112,6 +122,12 @@ const Home = () => {
     setMenuOpen(!menuOpen);
   };
 
+  const Logout = () => {
+    localStorage.removeItem("user")
+    localStorage.setItem("loggedIn", false)
+    window.location.reload();
+  }
+
   return (
     <div className="home-page">
       <header>
@@ -131,10 +147,12 @@ const Home = () => {
                 <li>
                   <button
                     className="button-TD"
-                    
-                  onClick={() => {if(localStorage.getItem("loggedIn")){navigate("/Gallery")}else{
-                    window.alert("Sign Up/Sign In first")
-                  }}}
+
+                    onClick={() => {
+                      if (localStorage.getItem("loggedIn") === "true") { navigate("/Gallery") } else {
+                        window.alert("Sign Up/Sign In first")
+                      }
+                    }}
                   >
                     <CollectionsIcon />
                     Gallery
@@ -143,9 +161,11 @@ const Home = () => {
                 <li>
                   <button
                     className="button-TD"
-                    onClick={() => {if(localStorage.getItem("loggedIn")){navigate("/Blog")}else{
-                      window.alert("Sign Up/Sign In first")
-                    }}}
+                    onClick={() => {
+                      if (localStorage.getItem("loggedIn") === "true") { navigate("/Blog") } else {
+                        window.alert("Sign Up/Sign In first")
+                      }
+                    }}
                   >
                     <BookIcon />
                     Blogs
@@ -154,9 +174,11 @@ const Home = () => {
                 <li>
                   <button
                     className="button-TD"
-                    onClick={() => {if(localStorage.getItem("loggedIn")){navigate("/Recipe")}else{
-                      window.alert("Sign Up/Sign In first")
-                    }}}
+                    onClick={() => {
+                      if (localStorage.getItem("loggedIn")  === "true") { navigate("/Recipe") } else {
+                        window.alert("Sign Up/Sign In first")
+                      }
+                    }}
                   >
                     <MenuBookIcon />
                     Recipe Book
@@ -165,17 +187,19 @@ const Home = () => {
                 <li>
                   <button
                     className="button-TD"
-                    onClick={() => {if(localStorage.getItem("loggedIn")){navigate("/Contact")}else{
-                      window.alert("Sign Up/Sign In first")
-                    }}}
+                    onClick={() => {
+                      if (localStorage.getItem("loggedIn") === "true") { navigate("/Contact") } else {
+                        window.alert("Sign Up/Sign In first")
+                      }
+                    }}
                   >
                     <LocalPhoneIcon />
                     Contact Us
                   </button>
                 </li>
                 <li>
-                  <button 
-                    className="button-TD" 
+                  <button
+                    className="button-TD"
                     onClick={() => navigate("/signup")}
                   >
                     <LogoutIcon />
@@ -183,14 +207,24 @@ const Home = () => {
                   </button>
                 </li>
                 <li>
-                  <button 
-                    className="button-TD" 
+                  <button
+                    className="button-TD"
                     onClick={() => navigate("/signin")}
                   >
                     <LogoutIcon />
                     Sign In
                   </button>
                 </li>
+                <li>
+                  <button
+                    className="button-TD"
+                    onClick={Logout}
+                  >
+                    <LogoutIcon />
+                    Log Out
+                  </button>
+                </li>
+                
               </ul>
             </nav>
           </div>
@@ -198,8 +232,8 @@ const Home = () => {
       </header>
 
       {/* Toggle Button for showing/hiding navbar */}
-      <button 
-        className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`} 
+      <button
+        className={`menu-toggle-button ${menuOpen ? 'menu-open' : ''}`}
         onClick={toggleMenu}
         aria-label={menuOpen ? "Close menu" : "Open menu"}
       >
@@ -208,7 +242,9 @@ const Home = () => {
 
       <main className={`home-content ${!menuOpen ? 'menu-closed' : ''}`}>
         <div className="welcome-banner">
-          <h1 className="welcome-banner-title">Welcome to Your Personal Space</h1>
+          <h1 className="welcome-banner-title">
+          {username ? `Welcome ${username}` : "Please sign in first"}
+            </h1>
           <p className="welcome-banner-subtitle">Capture memories, share recipes, and document your journey</p>
         </div>
 
@@ -231,25 +267,41 @@ const Home = () => {
         <section className="nav-cards-section">
           <h2 className="section-title">Explore</h2>
           <div className="cards-grid">
-            <div className="nav-card" onClick={() => navigate("/Gallery")}>
+            <div className="nav-card" onClick={() => {
+              if (localStorage.getItem("loggedIn")) { navigate("/Gallery") } else {
+                window.alert("Sign Up/Sign In first")
+              }
+            }}>
               <CollectionsIcon className="nav-card-icon" />
               <h3 className="nav-card-title">Gallery</h3>
               <p className="nav-card-description">Browse your photo collections</p>
             </div>
-            
-            <div className="nav-card" onClick={() => navigate("/Blog")}>
+
+            <div className="nav-card" onClick={() => {
+              if (localStorage.getItem("loggedIn")) { navigate("/Blog") } else {
+                window.alert("Sign Up/Sign In first")
+              }
+            }}>
               <BookIcon className="nav-card-icon" />
               <h3 className="nav-card-title">Blog</h3>
               <p className="nav-card-description">Read your journal entries</p>
             </div>
-            
-            <div className="nav-card" onClick={() => navigate("/Recipe")}>
+
+            <div className="nav-card" onClick={() => {
+              if (localStorage.getItem("loggedIn")) { navigate("/Recipe") } else {
+                window.alert("Sign Up/Sign In first")
+              }
+            }}>
               <MenuBookIcon className="nav-card-icon" />
               <h3 className="nav-card-title">Recipe Book</h3>
               <p className="nav-card-description">View your favorite recipes</p>
             </div>
-            
-            <div className="nav-card" onClick={() => navigate("/Contact")}>
+
+            <div className="nav-card" onClick={() => {
+              if (localStorage.getItem("loggedIn")) { navigate("/Contact") } else {
+                window.alert("Sign Up/Sign In first")
+              }
+            }}>
               <LocalPhoneIcon className="nav-card-icon" />
               <h3 className="nav-card-title">Contact</h3>
               <p className="nav-card-description">Get in touch with us</p>
