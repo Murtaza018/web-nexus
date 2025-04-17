@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
 
 // Mock data - in a real app, this would come from a database
 const recipes = [
@@ -387,6 +388,7 @@ function AddRecipe({ onBackHome, onRecipeAdded }) {
     };
     recipes.push(newRecipe);
     onRecipeAdded();
+    toast.success('Recipe created successfully!')
   };
 
   return (

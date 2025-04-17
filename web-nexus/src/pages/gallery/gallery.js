@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import toast from "react-hot-toast"
 import {
   Button,
   Box,
@@ -146,8 +147,10 @@ const Gallery = () => {
 
       const fileInput = document.getElementById("camera-input")
       if (fileInput) fileInput.value = ""
+      toast.success('Files uploaded successfully!')
     } catch (error) {
       console.error("Error uploading images:", error)
+      toast.error('Files not uploaded!')
     }
   }
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast"
 import './signIn.css';
 
 const SignIn = () => {
@@ -17,11 +18,11 @@ const SignIn = () => {
       storedUser.username === username &&
       storedUser.password === password
     ) {
-      alert('Login successful!');
+      toast.success('Logged in successfully!')
       localStorage.setItem("loggedIn",true)
       navigate('/');
     } else {
-      alert('Invalid credentials!');
+      toast.error('Invalid Credentials!')
     }
   };
 

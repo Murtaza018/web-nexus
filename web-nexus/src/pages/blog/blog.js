@@ -10,6 +10,7 @@ import {
   Send,
 } from "lucide-react";
 import "./blog.css";
+import toast from "react-hot-toast"
 
 // Sample data
 const initialJournalEntries = [
