@@ -64,12 +64,11 @@ const Gallery = () => {
     "aneeq",
   ];
 
-  const [currentUser, setCurrentUser] = useState({
-    firstname: "Dad",
-    lastname: "Raza",
-    username: "araza-29",
-    password: "aloomian",
+  const [currentUser, setCurrentUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
   });
+  
 
   useEffect(() => {
     const loadImages = async () => {
